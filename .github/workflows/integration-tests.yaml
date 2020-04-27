@@ -5,9 +5,22 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - name: cache minikube
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-minikube
+        with:
+          path: /opt/minikube/
+          key: ${{ runner.os }}-minikube
       - name: install minikube
         run: |
-          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          chmod +x minikube
+          #!/bin/bash
+          if [ ! -f "/opt/minikube/bin/minikube" ]; then
+            sudo mkdir -p /opt/minikube/bin
+            cd /opt/minikube/bin
+            sudo curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+            sudo chmod +x minikube
+          fi
+
           sudo mkdir -p /usr/local/bin/
-          sudo install minikube /usr/local/bin/
+          sudo install /opt/minikube/bin/minikube /usr/local/bin/
