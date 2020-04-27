@@ -25,4 +25,6 @@ jobs:
           sudo mkdir -p /usr/local/bin/
           sudo install /opt/minikube/bin/minikube /usr/local/bin/
       - name: start minikube
-        run: minikube start
+        run: |
+          minikube start
+          kubectl cluster-info
