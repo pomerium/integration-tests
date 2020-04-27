@@ -45,7 +45,7 @@ local Deployment = function() {
       spec: {
         containers: [{
           name: 'openid',
-          image: 'pomerium/reference-openid-provider:dev',
+          image: 'quay.io/calebdoxsey/reference-openid-provider:latest',
           imagePullPolicy: 'IfNotPresent',
           ports: [
             { name: 'http', containerPort: 6080 },

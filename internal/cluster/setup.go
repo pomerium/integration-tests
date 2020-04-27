@@ -164,7 +164,7 @@ func applyManifests(ctx context.Context, jsonsrc string) error {
 	}
 
 	log.Info().Msg("waiting for deployments to come up")
-	ctx, clearTimeout := context.WithTimeout(ctx, 30*time.Second)
+	ctx, clearTimeout := context.WithTimeout(ctx, 5*time.Minute)
 	defer clearTimeout()
 	ticker := time.NewTicker(time.Second * 5)
 	defer ticker.Stop()

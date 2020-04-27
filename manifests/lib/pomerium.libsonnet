@@ -153,7 +153,7 @@ local PomeriumDeployment = function(svc) {
         }],
         containers: [{
           name: 'pomerium-' + svc,
-          image: 'pomerium/pomerium:dev',
+          image: 'pomerium/pomerium:latest',
           imagePullPolicy: 'IfNotPresent',
           envFrom: [{
             configMapRef: { name: 'pomerium' },
