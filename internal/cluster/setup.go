@@ -55,15 +55,13 @@ func (cluster *Cluster) Setup(ctx context.Context) error {
 		return err
 	}
 
-	cluster.client = &http.Client{
-		Transport: httputil.NewLocalRoundTripper(&http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		}, map[string]string{
-			"443": hostport,
-		}),
-	}
+	cluster.transport = httputil.NewLocalRoundTripper(&http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}, map[string]string{
+		"443": hostport,
+	})
 
 	return nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -23,6 +24,13 @@ var (
 
 func TestMain(m *testing.M) {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
+	flag.Parse()
+	if testing.Verbose() {
+		log.Logger = log.Logger.Level(zerolog.DebugLevel)
+	} else {
+		log.Logger = log.Logger.Level(zerolog.InfoLevel)
+	}
 
 	mainCtx = context.Background()
 	var cancel func()

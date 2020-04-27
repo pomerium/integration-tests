@@ -58,13 +58,13 @@ func run(ctx context.Context, name string, options ...cmdOption) error {
 		defer stdout.Close()
 	}
 
-	log.Info().Strs("args", cmd.Args).Msgf("running %s", name)
+	log.Debug().Strs("args", cmd.Args).Msgf("running %s", name)
 	return cmd.Run()
 }
 
 func cmdLogger(rdr io.Reader) {
 	s := bufio.NewScanner(rdr)
 	for s.Scan() {
-		log.Info().Msg(s.Text())
+		log.Debug().Msg(s.Text())
 	}
 }

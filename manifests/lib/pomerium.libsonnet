@@ -3,25 +3,26 @@ local tls = import './tls.libsonnet';
 local PomeriumPolicy = function() [
   {
     from: 'http://httpdetails.localhost.pomerium.io',
+    prefix: '/by-domain',
+    to: 'http://httpdetails.default.svc.cluster.local',
+    allowed_domains: ['dogs.test'],
+  },
+  {
+    from: 'http://httpdetails.localhost.pomerium.io',
+    prefix: '/by-user',
+    to: 'http://httpdetails.default.svc.cluster.local',
+    allowed_users: ['bob@dogs.test'],
+  },
+  {
+    from: 'http://httpdetails.localhost.pomerium.io',
+    prefix: '/by-group',
+    to: 'http://httpdetails.default.svc.cluster.local',
+    allowed_groups: ['admin'],
+  },
+  {
+    from: 'http://httpdetails.localhost.pomerium.io',
     to: 'http://httpdetails.default.svc.cluster.local',
     allow_public_unauthenticated_access: true,
-  },
-  {
-    from: 'http://httpecho.localhost.pomerium.io',
-    to: 'http://httpecho.default.svc.cluster.local',
-    allowed_domains: ['pomerium.com'],
-  },
-  {
-    from: 'http://fa-httpecho.localhost.pomerium.io',
-    path: '/headers',
-    to: 'http://httpecho.default.svc.cluster.local',
-    allowed_domains: ['pomerium.com'],
-  },
-  {
-    from: 'http://fa-httpecho.localhost.pomerium.io',
-    path: '/ip',
-    to: 'http://httpecho.default.svc.cluster.local',
-    allowed_users: ['noone@pomerium.com'],
   },
 ];
 
@@ -152,7 +153,7 @@ local PomeriumDeployment = function(svc) {
         }],
         containers: [{
           name: 'pomerium-' + svc,
-          image: 'pomerium/pomerium:latest',
+          image: 'pomerium/pomerium:dev',
           imagePullPolicy: 'IfNotPresent',
           envFrom: [{
             configMapRef: { name: 'pomerium' },
@@ -234,6 +235,7 @@ local PomeriumIngress = function() {
     annotations: {
       'kubernetes.io/ingress.class': 'nginx',
       'nginx.ingress.kubernetes.io/backend-protocol': 'HTTPS',
+      'nginx.ingress.kubernetes.io/proxy-buffer-size': '16k',
     },
   },
   spec: {
@@ -285,6 +287,7 @@ local PomeriumForwardAuthIngress = function() {
       'kubernetes.io/ingress.class': 'nginx',
       'nginx.ingress.kubernetes.io/auth-url': 'https://forward-authenticate.localhost.pomerium.io/verify?uri=$scheme://$host$request_uri',
       'nginx.ingress.kubernetes.io/auth-signin': 'https://forward-authenticate.localhost.pomerium.io/?uri=$scheme://$host$request_uri',
+      'nginx.ingress.kubernetes.io/proxy-buffer-size': '16k',
     },
   },
   spec: {

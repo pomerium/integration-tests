@@ -15,12 +15,14 @@ func TestDashboard(t *testing.T) {
 	defer clearTimeout()
 
 	t.Run("image asset", func(t *testing.T) {
+		client := testcluster.NewHTTPClient()
+
 		req, err := http.NewRequestWithContext(ctx, "GET", "https://httpdetails.localhost.pomerium.io/.pomerium/assets/img/pomerium.svg", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		res, err := testcluster.Do(req)
+		res, err := client.Do(req)
 		if !assert.NoError(t, err, "unexpected http error") {
 			return
 		}
